@@ -22,6 +22,7 @@ public class EchoServer1 {
             MyServerDatagramSocket mySocket = new MyServerDatagramSocket(serverPort);
             System.out.println("Echo server ready.");
             String sentMessage = "wrong request. Please Retry";
+            ServerLogin login = new ServerLogin();
 //            while(true){
 //                DatagramMessage request =
 //                        mySocket.receiveMessageAndSender();
@@ -66,23 +67,28 @@ public class EchoServer1 {
                 switch (protocol){
                     case "100":
                         sentMessage = "101";
+                        mySocket.sendMessage(request.getAddress(),
+                          request.getPort(), sentMessage);
                         break;
                     case "200":
-                        ServerLogin login = new ServerLogin();
-                        if(login.checkLogin(mySocket, request)){
-                            sentMessage = "201";
-                        }
-                        else
-                            sentMessage = "202";
+                        login.login(mySocket, request);
+//                        if(login.checkLogin(mySocket, request)){
+//                            sentMessage = "201";
+//                        }
+//                        else
+//                            sentMessage = "202";
                         break;
                     case "300":
-                        sentMessage = "301";
+                        login.logout(mySocket, request);
                         break;
                     default:
+                        sentMessage = "666";
+                        mySocket.sendMessage(request.getAddress(),
+                            request.getPort(), sentMessage);
                         System.out.println("Danger Will Robinson!!!");
                 }
-                mySocket.sendMessage(request.getAddress(),
-                        request.getPort(), sentMessage);
+//                mySocket.sendMessage(request.getAddress(),
+//                        request.getPort(), sentMessage);
             }
 //            //Receive Function
 //            DatagramMessage request =

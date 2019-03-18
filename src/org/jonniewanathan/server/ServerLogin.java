@@ -30,8 +30,34 @@ public class ServerLogin {
         //return user.isPassword(password);
     }
 
-    public String login(String username, String password){
-        return "help";
+    public void login(MyServerDatagramSocket datagramSocket, DatagramMessage message){
+        String sentMessage;
+        if(checkLogin(datagramSocket, message))
+        {
+            sentMessage = "201";
+        }
+        else{
+            sentMessage = "201";
+        }
+        try{
+            datagramSocket.sendMessage(message.getAddress(),
+                    message.getPort(), sentMessage);
+        }catch (Exception e){
+            System.out.println(e);
+        }
+    }
+
+    public void logout(MyServerDatagramSocket datagramSocket, DatagramMessage message){
+
+        // Add check to see if user is logged in
+        String sentMessage = "301";
+
+        try{
+            datagramSocket.sendMessage(message.getAddress(),
+                    message.getPort(), sentMessage);
+        }catch (Exception e){
+            System.out.println(e);
+        }
     }
 
     private String extractPassword(DatagramMessage message){

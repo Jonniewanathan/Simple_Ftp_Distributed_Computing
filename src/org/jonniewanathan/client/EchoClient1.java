@@ -48,14 +48,18 @@ public class EchoClient1 {
                         System.out.println("Please enter your password: ");
                         message += "," + br.readLine();
                         break;
+                    case "logout":
+                        message = "300";
+                        System.out.println("You have logged out of the system");
+                        break;
                     default:
                         System.out.println("Wrong entry try again!!!");
                 }
 
-                echo = helper.getEcho(message);
-                System.out.println(echo);
+                message = helper.getEcho(message);
+                System.out.println(message);
 
-                String protocol = ClientMessage.extractProtocol(echo);
+                String protocol = ClientMessage.extractProtocol(message);
                 System.out.println(protocol);
 
 //            if ((message.trim()).equals (endMessage)){
