@@ -27,17 +27,37 @@ public class EchoClient1 {
                     new EchoClientHelper1(hostName, portNum);
             boolean done = false;
             String message, echo;
-            message = "ping";
-
-            echo = helper.getEcho(message);
-            System.out.println(echo);
+//            message = "100";
+//
+//            echo = helper.getEcho(message);
+//            System.out.println(echo);
             while (!done) {
 //                System.out.println("Enter a line to receive an echo back from the server, "
 //                                + "or a single peroid to quit.");
+                System.out.print("Type 'ping' or 'login': ");
                 message = br.readLine();
+
+                switch (message){
+                    case "ping":
+                        message = "100";
+                        break;
+                    case "login":
+                        message = "200";
+                        System.out.println("Please enter your username: ");
+                        message += "," + br.readLine();
+                        System.out.println("Please enter your password: ");
+                        message += "," + br.readLine();
+                        break;
+                    default:
+                        System.out.println("Wrong entry try again!!!");
+                }
 
                 echo = helper.getEcho(message);
                 System.out.println(echo);
+
+                String protocol = ClientMessage.extractProtocol(echo);
+                System.out.println(protocol);
+
 //            if ((message.trim()).equals (endMessage)){
 //               done = true;
 //               helper.done();

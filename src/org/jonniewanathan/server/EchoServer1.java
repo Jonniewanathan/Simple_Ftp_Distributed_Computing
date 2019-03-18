@@ -39,38 +39,91 @@ public class EchoServer1 {
 //
 //            }
 
-            DatagramMessage request =
-                    mySocket.receiveMessageAndSender();
-            String message = request.getMessage();
-            System.out.println("Request received");
-            System.out.println("message received: " + message);
-            sentMessage = "Please Enter your Username: ";
-            mySocket.sendMessage(request.getAddress(),
-                    request.getPort(), sentMessage);
+            while(true){
+                //Receive Function
+                DatagramMessage request =
+                        mySocket.receiveMessageAndSender();
+                String message = request.getMessage();
+                System.out.println("Request received");
+                System.out.println("message received: " + message);
 
-            request =
-                    mySocket.receiveMessageAndSender();
-            String username = request.getMessage();
-            System.out.println("Request received");
-            System.out.println("message received: " + username);
-            mySocket.sendMessage(request.getAddress(),
-                    request.getPort(), "Please Enter your Password: ");
+                String protocol = ServerMessage.extractProtocol(request);
+                System.out.println(protocol);
+                //Ends Here
 
-            request =
-                    mySocket.receiveMessageAndSender();
-            String password = request.getMessage();
-            System.out.println("Request received");
-            System.out.println("message received: " + password);
+                //Send Function
+                //Needs address and port to send to
+                sentMessage = "101";
 
-            if(Login.checkLogin(username,password)){
-                sentMessage = "You are now Logged in!!";
+                //Ends here
+
+                /*
+                  codes:
+                  100: server ping
+                  200: login
+                  300: logout
+                 */
+                switch (protocol){
+                    case "100":
+                        sentMessage = "101";
+                        break;
+                    case "200":
+                        ServerLogin login = new ServerLogin();
+                        if(login.checkLogin(mySocket, request)){
+                            sentMessage = "201";
+                        }
+                        else
+                            sentMessage = "202";
+                        break;
+                    case "300":
+                        sentMessage = "301";
+                        break;
+                    default:
+                        System.out.println("Danger Will Robinson!!!");
+                }
+                mySocket.sendMessage(request.getAddress(),
+                        request.getPort(), sentMessage);
             }
-            else{
-                sentMessage = "Please try again later you have not been logged in!";
-            }
-
-            mySocket.sendMessage(request.getAddress(),
-                    request.getPort(), sentMessage);
+//            //Receive Function
+//            DatagramMessage request =
+//                    mySocket.receiveMessageAndSender();
+//            String message = request.getMessage();
+//            String newmessage = message.substring(0,3);
+//            System.out.println(newmessage);
+//            System.out.println("Request received");
+//            System.out.println("message received: " + message);
+//            //Ends Here
+//
+//            //Send Function
+//            //Needs address and port to send to
+//            sentMessage = "Please Enter your Username: ";
+//            mySocket.sendMessage(request.getAddress(),
+//                    request.getPort(), sentMessage);
+//            //Ends here
+//
+//            request =
+//                    mySocket.receiveMessageAndSender();
+//            String username = request.getMessage();
+//            System.out.println("Request received");
+//            System.out.println("message received: " + username);
+//            mySocket.sendMessage(request.getAddress(),
+//                    request.getPort(), "Please Enter your Password: ");
+//
+//            request =
+//                    mySocket.receiveMessageAndSender();
+//            String password = request.getMessage();
+//            System.out.println("Request received");
+//            System.out.println("message received: " + password);
+//
+//            if(ServerLogin.checkLogin(username,password)){
+//                sentMessage = "You are now Logged in!!";
+//            }
+//            else{
+//                sentMessage = "Please try again later you have not been logged in!";
+//            }
+//
+//            mySocket.sendMessage(request.getAddress(),
+//                    request.getPort(), sentMessage);
 
 
         } // end try
