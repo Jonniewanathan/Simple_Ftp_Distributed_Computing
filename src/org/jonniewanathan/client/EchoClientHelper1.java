@@ -13,8 +13,18 @@ public class EchoClientHelper1 {
     private MyClientDatagramSocket mySocket;
     private InetAddress serverHost;
     private int serverPort;
+    private static EchoClientHelper1 helper;
 
-    EchoClientHelper1(String hostName, String portNum)
+    public static EchoClientHelper1 getHelper(String hostName, String portNum)
+            throws SocketException, UnknownHostException {
+
+        if(helper == null){
+            helper = new EchoClientHelper1(hostName, portNum);
+        }
+        return helper;
+    }
+
+    private EchoClientHelper1(String hostName, String portNum)
             throws SocketException, UnknownHostException {
         this.serverHost = InetAddress.getByName(hostName);
         this.serverPort = Integer.parseInt(portNum);
@@ -23,7 +33,7 @@ public class EchoClientHelper1 {
         this.mySocket = new MyClientDatagramSocket(63000);
     }
 
-    public MyClientDatagramSocket getMySocket(){
+    public MyClientDatagramSocket getMySocket() {
         return this.mySocket;
     }
 
@@ -33,6 +43,14 @@ public class EchoClientHelper1 {
         mySocket.sendMessage(serverHost, serverPort, message);
         // now receive the echo
         echo = mySocket.receiveMessage();
+        return echo;
+    } //end getEcho
+
+    public String getEcho(byte[] message)
+            throws SocketException, IOException {
+        mySocket.sendMessageFromBytes(serverHost, serverPort, message);
+        // now receive the echo
+        String echo = mySocket.receiveMessage();
         return echo;
     } //end getEcho
 

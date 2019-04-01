@@ -30,9 +30,18 @@ public class File {
         return this.size;
     }
 
+    //C:\Users\Jonathan\Desktop\Projects\Simple_Ftp_Distributed_Computing\src\org\jonniewanathan\server\Jonathan
+    // org/jonniewanathan/server/Jonathan/test_doc.txt
+
     public void saveFile(String username) throws IOException {
-        FileOutputStream outputStream = new FileOutputStream(".\\" + username + "\\" + this.fileName);
-        System.out.println(this.fileName);
+        String path = System.getProperty("user.dir");
+        path = path + "/src/org/jonniewanathan/server/" + username + "/" + this.fileName;
+        System.out.println(path);
+        java.io.File file = new java.io.File(path);
+        if (!file.exists()) {
+            file.createNewFile();
+        }
+        FileOutputStream outputStream = new FileOutputStream(file);
         outputStream.write(this.fileData);
 
         outputStream.close();
