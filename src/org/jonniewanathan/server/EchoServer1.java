@@ -1,5 +1,7 @@
 package org.jonniewanathan.server;
 
+import java.io.IOException;
+
 /**
  * This module contains the application logic of an echo server
  * which uses a connectionless datagram socket for interprocess
@@ -26,14 +28,13 @@ public class EchoServer1 {
                 //Receive Function
                 DatagramMessage request =
                         mySocket.receiveMessageAndSender();
-                String message = request.getMessage();
                 System.out.println("Request received");
+                String message = request.getMessage();
                 System.out.println("message received: " + message);
 
                 String protocol = ServerMessage.extractProtocol(request);
                 System.out.println(protocol);
                 //Ends Here
-
                 /*
                   codes:
                   100: server ping
@@ -47,10 +48,38 @@ public class EchoServer1 {
                           request.getPort(), sentMessage);
                         break;
                     case "200":
+                        System.out.println(request.getPort());
+                        System.out.println(request.getAddress());
                         login.login(mySocket, request);
                         break;
                     case "300":
                         login.logout(mySocket, request);
+                        break;
+                    case "400":
+                        System.out.println(request.getMessage());
+                        System.out.println(request.getPort());
+                        System.out.println(request.getAddress());
+                        if(login.checkUserLoggedInAddressPort(request.getAddress(), request.getPort())){
+                            try{
+                                User user = login.getUser(request.getAddress(), request.getPort());
+                                System.out.println(request.getMessage());
+                                String filename = ServerMessage.extractFileName(request);
+                                String data = ServerMessage.extractFileData(request);
+                                File file = new File(filename, data.getBytes(), data.length());
+                                file.saveFile(user.getUsername());
+                                System.out.println("File Saved Successfully!");
+                                sentMessage = "401";
+                            }
+                            catch (IOException e){
+                                sentMessage = "402";
+                                System.out.println("File did not save");
+                            }
+                        }
+                        else{
+                            sentMessage = "102";
+                        }
+                        mySocket.sendMessage(request.getAddress(),
+                                request.getPort(), sentMessage);
                         break;
                     default:
                         sentMessage = "666";

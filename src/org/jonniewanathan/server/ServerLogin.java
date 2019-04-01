@@ -10,7 +10,7 @@ public class ServerLogin {
     public ServerLogin() {
     }
 
-    public boolean checkLogin(MyServerDatagramSocket socket, DatagramMessage datagramMessage){
+    public boolean checkLogin(DatagramMessage datagramMessage){
         //Do this without hardcoding
         RegisteredUsers users = new RegisteredUsers();
         HashMap<String, String> userList = users.returnUsers();
@@ -23,8 +23,8 @@ public class ServerLogin {
                 if(checkUserLoggedInUsernamePassword(username, password)){
                     return false;
                 }
-                else {
-                    activeUsers.add(new User(username, password, socket.getInetAddress(), socket.getPort()));
+                else{
+                    activeUsers.add(new User(username, password, datagramMessage.getAddress(), datagramMessage.getPort()));
                     return true;
                 }
             }
@@ -38,6 +38,8 @@ public class ServerLogin {
 
     private boolean checkUserLoggedInUsernamePassword(String username, String password) {
         for (User user: activeUsers) {
+            System.out.println(user.getUsername());
+            System.out.println(user.getPassword());
             if (user.getUsername().equals(username) &&
                     user.getPassword().equals(password)) {
                 return true;
@@ -46,9 +48,9 @@ public class ServerLogin {
         return false;
     }
 
-    private boolean checkUserLoggedInAddressPort(InetAddress address, int port) {
+    public boolean checkUserLoggedInAddressPort(InetAddress address, int port) {
         for (User user: activeUsers) {
-            if (user.getAddress() == address &&
+            if (user.getAddress().equals(address) &&
                     user.getPort() == port) {
                 return true;
             }
@@ -57,18 +59,35 @@ public class ServerLogin {
     }
 
     //find active users based their address and port
-    private int findUserInActiveUsers(InetAddress address, int port){
+    public int findUserInActiveUsers(InetAddress address, int port){
         for (int i = 0; i< activeUsers.size(); i++) {
-            if (activeUsers.get(i).getAddress() == address && activeUsers.get(i).getPort() == port) {
+            if (activeUsers.get(i).getAddress().equals(address) && activeUsers.get(i).getPort() == port) {
                 return i;
             }
         }
         return 1000;
     }
 
+    public int findUserInActiveUsers(String username, String password){
+        for (int i = 0; i< activeUsers.size(); i++) {
+            if (activeUsers.get(i).getUsername().equals(username) && activeUsers.get(i).getPassword().equals(password)) {
+                return i;
+            }
+        }
+        return 1000;
+    }
+
+    public User getUser(InetAddress address, int port){
+        return activeUsers.get(findUserInActiveUsers(address, port));
+    }
+
+    public User getUser(String username, String password){
+        return activeUsers.get(findUserInActiveUsers(username, password));
+    }
+
     public void login(MyServerDatagramSocket datagramSocket, DatagramMessage message){
         String sentMessage;
-        boolean check = checkLogin(datagramSocket, message);
+        boolean check = checkLogin(message);
         if(check)
         {
             sentMessage = "201";
@@ -88,16 +107,14 @@ public class ServerLogin {
 
         // Add check to see if user is logged in
         String sentMessage;
-        if (checkUserLoggedInAddressPort(datagramSocket.getInetAddress(), datagramSocket.getPort())) {
+        if (checkUserLoggedInAddressPort(message.getAddress(), message.getPort())) {
             sentMessage = "301";
-            int index = findUserInActiveUsers(datagramSocket.getInetAddress(), datagramSocket.getPort());
+            int index = findUserInActiveUsers(message.getAddress(), message.getPort());
             activeUsers.remove(activeUsers.get(index));
         }
         else{
             sentMessage = "302";
         }
-
-
         try{
             datagramSocket.sendMessage(message.getAddress(),
                     message.getPort(), sentMessage);
@@ -115,6 +132,4 @@ public class ServerLogin {
         String username = message.getMessage().split(",")[1];
         return username;
     }
-
-
 }
