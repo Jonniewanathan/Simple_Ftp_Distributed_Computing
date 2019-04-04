@@ -83,10 +83,10 @@ public class ClientLogin {
             String echo = helper.getEcho(createLogoutString());
             echo = ClientMessage.extractProtocol(echo);
             if(echo.equals("301")){
-                return "Successful Logout";
+                return "301,Successful Logout";
             }
             else if(echo.equals("302")){
-                return "Logout was not Successful at this time";
+                return "302,Logout was not Successful at this time";
             }
             return echo;
         }
