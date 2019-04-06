@@ -14,9 +14,8 @@ public class ClientFile {
             return new File(fileName, data, data.length);
         }catch (IOException e){
             System.out.println("File could not be found");
+            return new File("", new byte[1], 1);
         }
-
-        return new File("", new byte[1], 1);
     }
 
     private static byte[] getBytesFromFile(String filepath) throws IOException{

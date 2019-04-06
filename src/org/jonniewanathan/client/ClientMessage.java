@@ -7,4 +7,19 @@ public class ClientMessage {
         return protocol;
     }
 
+    public static String addProtocol(String protocol, String message){
+        String messageWithProtocol = protocol + "," + message;
+        return messageWithProtocol;
+    }
+
+
+    public static String extractFileName(String message){
+        String fileName = message.split(",")[1];
+        return fileName;
+    }
+
+    public static String extractFileData(String message){
+        String data = message.split(",")[2];
+        return data;
+    }
 }

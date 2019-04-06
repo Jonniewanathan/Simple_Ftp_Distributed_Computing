@@ -10,7 +10,7 @@ import java.io.*;
  * @author M. L. Liu
  */
 public class MyClientDatagramSocket extends DatagramSocket {
-    static final int MAX_LEN = 100;
+    static final int MAX_LEN = 65536;
 
     MyClientDatagramSocket() throws SocketException {
         super();

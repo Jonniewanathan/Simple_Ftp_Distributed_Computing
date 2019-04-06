@@ -100,10 +100,24 @@ public class GUI implements ActionListener {
             JFileChooser uploadFile = new JFileChooser();
             uploadFile.showOpenDialog(this.frame);
             String path = uploadFile.getSelectedFile().getAbsolutePath();
+
             File file = ClientFile.getFile(path);
             String message = file.upload();
             information.setText(message);
             System.out.println("Upload File");
+        }
+        if(e.getSource() == downloadButton){
+
+            JFileChooser downloadFile = new JFileChooser();
+            downloadFile.showSaveDialog(this.frame);
+            String fileName = downloadTextField.getText();
+            String path = downloadFile.getCurrentDirectory().getAbsolutePath() + "\\" + fileName;
+            System.out.println(path);
+            byte[] bytes = new  byte[1]; // dummy data
+            File file = new File(fileName,bytes, bytes.length);
+            String message = file.download(path);
+            information.setText(message);
+            System.out.println("Download File");
         }
     }
 }
