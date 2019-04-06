@@ -81,8 +81,14 @@ public class EchoServer1 {
                             User user = login.getUser(request.getAddress(), request.getPort());
                             String filename = ServerMessage.extractFileName(request);
                             File file = ServerFile.getFile(filename, user);
-                            file.send(mySocket, request);
-                            System.out.println("File Sent Successfully!");
+                            if(!file.getFileName().equals("")){
+                                file.send(mySocket, request);
+                                System.out.println("File Sent Successfully!");
+                            }
+                            else{
+                                mySocket.sendMessage(request.getAddress(), request.getPort(), "502");
+                            }
+
                         }
                         break;
                     default:

@@ -44,6 +44,9 @@ public class File {
             else if(echo.equals("402")){
                 return "Upload was not Successful at this time";
             }
+            else if(echo.equals("102")){
+                return "User Not logged in";
+            }
             return echo;
         }
         catch (SocketException e){
@@ -79,6 +82,9 @@ public class File {
             }
             else if(protocol.equals("502")){
                 return "Download was Unsuccessful";
+            }
+            else if(echo.equals("102")){
+                return "User Not logged in";
             }
             return protocol;
         }

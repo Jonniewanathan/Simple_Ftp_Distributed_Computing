@@ -53,10 +53,10 @@ public class ClientLogin {
             String echo = helper.getEcho(createLoginString());
             echo = ClientMessage.extractProtocol(echo);
             if(echo.equals("201")){
-                return "Successful Login";
+                return "201,Successful Login";
             }
             else if(echo.equals("202")){
-                return "Login was not Successful at this time";
+                return "202,Login was not Successful at this time";
             }
             return echo;
         }
