@@ -31,7 +31,7 @@ public class GUI implements ActionListener {
 
         //layoutManager
         LayoutManager flowLayout = new FlowLayout();
-        LayoutManager gridLayout = new GridLayout(4, 1,10, 10);
+        LayoutManager gridLayout = new GridLayout(4, 1);
         frame.setLayout(gridLayout);
         JPanel loginPanel = new JPanel();
         JPanel downloadPanel = new JPanel();
@@ -112,13 +112,17 @@ public class GUI implements ActionListener {
         if(e.getSource() == uploadButton){
             try{
                 JFileChooser uploadFile = new JFileChooser();
-                uploadFile.showOpenDialog(this.frame);
-                String path = uploadFile.getSelectedFile().getAbsolutePath();
-
-                File file = ClientFile.getFile(path);
-                String message = file.upload();
-                information.setText(message);
-                System.out.println("Upload File");
+                int option = uploadFile.showOpenDialog(this.frame);
+                if( option == JFileChooser.APPROVE_OPTION) {
+                    String path = uploadFile.getSelectedFile().getAbsolutePath();
+                    File file = ClientFile.getFile(path);
+                    String message = file.upload();
+                    information.setText(message);
+                    System.out.println("Upload File");
+                }
+                else {
+                    System.out.println("No file Chosen");
+                }
             }catch(NullPointerException exception){
                 System.out.println("No File Selected");
             }

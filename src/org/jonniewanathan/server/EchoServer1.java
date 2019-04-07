@@ -69,7 +69,7 @@ public class EchoServer1 {
                                 System.out.println("File did not save");
                             }
                         } else {
-                            sentMessage = "102";
+                            sentMessage = "202";
                         }
                         mySocket.sendMessage(request.getAddress(),
                                 request.getPort(), sentMessage);
