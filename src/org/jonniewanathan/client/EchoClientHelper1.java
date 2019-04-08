@@ -48,7 +48,7 @@ public class EchoClientHelper1 {
 
     public String getEcho(byte[] message)
             throws SocketException, IOException {
-        mySocket.sendMessageFromBytes(serverHost, serverPort, message);
+        mySocket.sendMessage(serverHost, serverPort, message);
         // now receive the echo
         String echo = mySocket.receiveMessage();
         return echo;

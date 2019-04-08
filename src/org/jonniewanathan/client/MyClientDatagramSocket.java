@@ -31,7 +31,7 @@ public class MyClientDatagramSocket extends DatagramSocket {
         this.send(datagram);
     } // end sendMessage
 
-    public void sendMessageFromBytes(InetAddress receiverHost,int receiverPort,byte[] message)throws IOException {
+    public void sendMessage(InetAddress receiverHost, int receiverPort, byte[] message)throws IOException {
         DatagramPacket datagram =
                 new DatagramPacket(message, message.length,
                         receiverHost, receiverPort);
